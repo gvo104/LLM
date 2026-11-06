@@ -1,0 +1,8 @@
+# Локальные секреты и настройки редактора
+.env
+.vscode/
+
+# Артефакты Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
