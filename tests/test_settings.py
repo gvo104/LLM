@@ -8,6 +8,7 @@ from src.config import (
     create_chat_model,
     load_runtime_settings,
 )
+from src.config.model_config import MAX_TOKENS
 
 
 def test_load_runtime_settings_reads_only_allowed_keys(tmp_path: Path) -> None:
@@ -60,6 +61,6 @@ def test_model_factory_sets_effort_and_thinking_for_every_model() -> None:
 
     assert regular.reasoning_effort == "none"
     assert regular.extra_body == {"chat_template_kwargs": {"enable_thinking": False}}
-    assert regular.max_tokens == 512
+    assert regular.max_tokens == MAX_TOKENS
     assert reasoning.reasoning_effort == "low"
     assert reasoning.extra_body == {"chat_template_kwargs": {"enable_thinking": True}}

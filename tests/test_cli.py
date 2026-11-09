@@ -36,6 +36,12 @@ def test_cli_parses_search_command() -> None:
     assert args.query == "Покажи планшеты"
 
 
+def test_cli_parses_chat_command() -> None:
+    args = cli.build_parser().parse_args(["chat"])
+
+    assert args.command == "chat"
+
+
 def test_part4_runs_without_runtime_settings(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.chdir(tmp_path)
 

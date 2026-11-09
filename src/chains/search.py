@@ -17,6 +17,7 @@ class SearchResponse:
     message: str
     sql: str | None = None
     sql_parameters: tuple[object, ...] = ()
+    input_tokens: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -24,6 +25,7 @@ class SearchResponse:
             "parsed_query": self.product_query.model_dump(mode="json"),
             "sql": self.sql,
             "sql_parameters": list(self.sql_parameters),
+            "input_tokens": self.input_tokens,
             "products": [product.model_dump(mode="json") for product in self.products],
             "message": self.message,
         }

@@ -52,10 +52,21 @@ class RetryingSearchPipeline:
         self.logger = logger
 
     def invoke(self, user_query: str) -> SearchResponse:
+        parser = build_product_query_parser()
+        prompt = build_product_query_prompt(parser)
+        return self.invoke_with_prompt(user_query, prompt, {"query": user_query})
+
+    def invoke_with_prompt(
+        self,
+        user_query: str,
+        prompt,
+        prompt_values: dict,
+        on_valid_query=None,
+    ) -> SearchResponse:
         request_id = uuid4().hex
         attempts = 0
         parser = build_product_query_parser()
-        prompt = build_product_query_prompt(parser)
+        input_tokens: int | None = None
 
         def mark_attempt(messages):
             nonlocal attempts
@@ -64,11 +75,16 @@ class RetryingSearchPipeline:
             return messages
 
         def call_model(messages):
+            nonlocal input_tokens
             try:
-                return self.llm.invoke(messages)
+                response = self.llm.invoke(messages)
             except Exception as error:
                 log_event(self.logger, request_id, "llm_error", type(error).__name__)
                 raise
+            usage_metadata = getattr(response, "usage_metadata", None) or {}
+            value = usage_metadata.get("input_tokens")
+            input_tokens = value if isinstance(value, int) else None
+            return response
 
         def parse_response(response):
             try:
@@ -90,18 +106,24 @@ class RetryingSearchPipeline:
         )
 
         try:
-            product_query = (prompt | retrying_chain).invoke({"query": user_query})
+            product_query = (prompt | retrying_chain).invoke(prompt_values)
         except OutputParserException as error:
             log_event(self.logger, request_id, "failed", "Попытки разбора исчерпаны.")
             raise RetryExhaustedError(
                 "Не удалось распознать запрос после 3 попыток."
             ) from error
 
+        if on_valid_query is not None:
+            on_valid_query(product_query)
+
         if product_query.category == "other":
             log_event(self.logger, request_id, "sqlite", "Поиск пропущен: неподдерживаемая категория.")
-            return execute_search(user_query, product_query, self.repository)
+            response = execute_search(user_query, product_query, self.repository)
+            response.input_tokens = input_tokens
+            return response
 
         log_event(self.logger, request_id, "sqlite", "Начало поиска.")
         response = execute_search(user_query, product_query, self.repository)
+        response.input_tokens = input_tokens
         log_event(self.logger, request_id, "sqlite", f"Найдено товаров: {len(response.products)}.")
         return response

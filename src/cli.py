@@ -18,6 +18,7 @@ from src.chains.tool_calling import (
 )
 from src.catalog import ProductQuery, ProductRepository
 from src.config import ConfigurationError, create_chat_model, load_runtime_settings
+from src.dialogue import StateDialogueSession, compare_dialogues
 from src.retry import RetryingSearchPipeline, RetryExhaustedError, analyze_parser_errors, configure_logging
 from src.retry.fakes import (
     CountingProductRepository,
@@ -67,7 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Демонстрации лабораторной работы №1")
     commands = parser.add_subparsers(dest="command", required=True)
     demo = commands.add_parser("demo", help="Запустить демонстрацию части лабораторной")
-    demo.add_argument("part", choices=["part1", "part2", "part3", "part4"])
+    demo.add_argument("part", choices=["part1", "part2", "part3", "part4", "part5"])
     demo.add_argument(
         "--reasoning-effort",
         choices=["low", "medium", "high"],
@@ -78,6 +79,7 @@ def build_parser() -> argparse.ArgumentParser:
     search = commands.add_parser("search", help="Найти товары по запросу")
     search.add_argument("query")
     search.add_argument("--output", type=Path, help="Куда сохранить JSON-результат")
+    commands.add_parser("chat", help="Открыть интерактивный диалог с каталогом")
     return parser
 
 
@@ -94,6 +96,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Ошибка конфигурации: {error}")
         return 2
 
+    if args.command == "chat":
+        return _run_chat(settings)
+
     try:
         if args.command == "search":
             result = _run_search(settings, args.query)
@@ -101,8 +106,10 @@ def main(argv: list[str] | None = None) -> int:
             result = _run_part1(settings)
         elif args.part == "part2":
             result = _run_part2(settings, args.reasoning_effort)
-        else:
+        elif args.part == "part3":
             result = _run_part3(settings)
+        else:
+            result = _run_part5(settings)
     except Exception as error:
         name = args.query if args.command == "search" else args.part
         result = {"command": name, "error": str(error)}
@@ -300,6 +307,46 @@ def _run_part4() -> dict[str, Any]:
         "log_path": str(log_path),
         "retry_demo": retry_demo,
     }
+
+
+def _run_part5(settings) -> dict[str, Any]:
+    logger = configure_logging(Path("logs/pipeline.log"))
+    comparison = compare_dialogues(
+        create_chat_model(settings, reasoning_effort="none"),
+        logger,
+    )
+    return {"part": "part5", "log_path": "logs/pipeline.log", **comparison.to_dict()}
+
+
+def _run_chat(settings) -> int:
+    logger = configure_logging(Path("logs/pipeline.log"))
+    session = StateDialogueSession(
+        RetryingSearchPipeline(
+            create_chat_model(settings, reasoning_effort="none"),
+            ProductRepository(),
+            logger,
+        )
+    )
+    print("Введите запрос, /state, /reset или /exit.")
+    while True:
+        try:
+            text = input("> ").strip()
+        except EOFError:
+            print()
+            return 0
+        if text == "/exit":
+            return 0
+        if text == "/state":
+            value = session.current_query.model_dump(mode="json") if session.current_query else None
+            print(json.dumps(value, ensure_ascii=False))
+            continue
+        if text == "/reset":
+            session.reset()
+            print("Состояние диалога очищено.")
+            continue
+        if not text:
+            continue
+        print(json.dumps(session.handle(text).to_dict(), ensure_ascii=False, indent=2))
 
 
 def _print_and_optionally_save(result: dict[str, Any], output_path: Path | None) -> None:
