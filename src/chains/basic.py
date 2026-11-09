@@ -1,16 +1,14 @@
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
+from src.prompt_loader import load_prompt
+
 
 def build_category_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages(
         [
-            (
-                "system",
-                "Ты определяешь категорию товара. Поддерживаемые категории: "
-                "laptop, smartphone, tablet, other. Отвечай на языке {language}.",
-            ),
-            ("human", "{query}"),
+            ("system", load_prompt("basic/system.txt")),
+            ("human", load_prompt("basic/human.txt")),
         ]
     )
 

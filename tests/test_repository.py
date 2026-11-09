@@ -52,6 +52,18 @@ def test_search_orders_by_descending_price(catalog_database: Path) -> None:
     assert [product.price for product in products] == [90_000, 20_000]
 
 
+def test_build_search_statement_returns_template_and_bound_values() -> None:
+    sql, parameters = ProductRepository.build_search_statement(
+        ProductQuery(category="laptop", max_price=70_000)
+    )
+
+    assert sql == (
+        "SELECT id, name, category, price FROM products "
+        "WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC"
+    )
+    assert parameters == ("laptop", 70_000)
+
+
 def test_search_returns_an_empty_list_when_no_products_match(catalog_database: Path) -> None:
     repository = ProductRepository(catalog_database)
 

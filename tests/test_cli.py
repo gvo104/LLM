@@ -24,6 +24,13 @@ def test_cli_saves_request_error_when_output_is_requested(
 
     assert exit_code == 1
     assert json.loads(output_path.read_text(encoding="utf-8")) == {
-        "part": "part1",
+        "command": "part1",
         "error": "rejected",
     }
+
+
+def test_cli_parses_search_command() -> None:
+    args = cli.build_parser().parse_args(["search", "Покажи планшеты"])
+
+    assert args.command == "search"
+    assert args.query == "Покажи планшеты"

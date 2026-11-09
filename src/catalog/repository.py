@@ -29,7 +29,7 @@ class ProductRepository:
         if not self.db_path.is_file():
             raise CatalogDatabaseError(f"Файл каталога не найден: {self.db_path}")
 
-        sql, parameters = self._build_query(query)
+        sql, parameters = self.build_search_statement(query)
         try:
             with sqlite3.connect(self._read_only_uri(), uri=True) as connection:
                 connection.row_factory = sqlite3.Row
@@ -43,7 +43,12 @@ class ProductRepository:
         return f"{self.db_path.resolve().as_uri()}?mode=ro"
 
     @staticmethod
-    def _build_query(query: ProductQuery) -> tuple[str, tuple[object, ...]]:
+    def build_search_statement(query: ProductQuery) -> tuple[str, tuple[object, ...]]:
+        if not isinstance(query, ProductQuery):
+            raise TypeError("build_search_statement ожидает экземпляр ProductQuery.")
+        if query.category == "other":
+            raise UnsupportedCategoryError(query.category)
+
         conditions = ["category = ?"]
         parameters: list[object] = [query.category]
 
