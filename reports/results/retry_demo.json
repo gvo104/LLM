@@ -1,0 +1,64 @@
+{
+  "without_retry": {
+    "error": "OutputParserException",
+    "llm_calls": 1
+  },
+  "retry_success": {
+    "llm_calls": 2,
+    "sqlite_calls": 1,
+    "response": {
+      "query": "Ноутбуки до 70 тысяч",
+      "parsed_query": {
+        "category": "laptop",
+        "max_price": 70000,
+        "sort_by": "price_asc"
+      },
+      "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+      "sql_parameters": [
+        "laptop",
+        70000
+      ],
+      "products": [
+        {
+          "id": 1,
+          "name": "Ноутбук Acer Aspire 3",
+          "category": "laptop",
+          "price": 45990
+        },
+        {
+          "id": 2,
+          "name": "Ноутбук ASUS VivoBook 15",
+          "category": "laptop",
+          "price": 67990
+        }
+      ],
+      "message": "Найдено товаров: 2."
+    }
+  },
+  "retry_exhausted": {
+    "error": "Не удалось распознать запрос после 3 попыток.",
+    "llm_calls": 3,
+    "sqlite_calls": 0
+  },
+  "network_error": {
+    "error": "offline",
+    "llm_calls": 1,
+    "sqlite_calls": 0
+  },
+  "other_category": {
+    "llm_calls": 1,
+    "sqlite_calls": 0,
+    "response": {
+      "query": "Найди холодильники",
+      "parsed_query": {
+        "category": "other",
+        "max_price": null,
+        "sort_by": "price_asc"
+      },
+      "sql": null,
+      "sql_parameters": [],
+      "products": [],
+      "message": "Категория не поддерживается каталогом."
+    }
+  }
+}

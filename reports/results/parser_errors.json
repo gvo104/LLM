@@ -1,0 +1,20 @@
+[
+  {
+    "scenario": "invalid_json",
+    "response": "это не JSON",
+    "error_type": "OutputParserException",
+    "cause": "Expecting value: line 1 column 1 (char 0)"
+  },
+  {
+    "scenario": "invalid_category",
+    "response": "{\"category\":\"refrigerator\",\"max_price\":null,\"sort_by\":\"price_asc\"}",
+    "error_type": "OutputParserException",
+    "cause": "1 validation error for ProductQuery\ncategory\n  Input should be 'laptop', 'smartphone', 'tablet' or 'other' [type=literal_error, input_value='refrigerator', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.14/v/literal_error"
+  },
+  {
+    "scenario": "invalid_price",
+    "response": "{\"category\":\"laptop\",\"max_price\":-1,\"sort_by\":\"price_asc\"}",
+    "error_type": "OutputParserException",
+    "cause": "1 validation error for ProductQuery\nmax_price\n  Input should be greater than or equal to 0 [type=greater_than_equal, input_value=-1, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.14/v/greater_than_equal"
+  }
+]

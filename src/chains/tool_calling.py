@@ -31,6 +31,7 @@ def build_search_tool(repository: ProductRepository) -> BaseTool:
         max_price: int | None = None,
         sort_by: str = "price_asc",
     ) -> str:
+        """Ищет товары каталога по проверенным параметрам ProductQuery."""
         response = execute_search(
             "",
             ProductQuery(category=category, max_price=max_price, sort_by=sort_by),

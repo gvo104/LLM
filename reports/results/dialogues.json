@@ -1,0 +1,681 @@
+{
+  "part": "part5",
+  "log_path": "logs/pipeline.log",
+  "dialogues": [
+    {
+      "name": "dialogue_a",
+      "turns": [
+        {
+          "user_message": "Покажи ноутбуки до 80 тысяч",
+          "expected_query": {
+            "category": "laptop",
+            "max_price": 80000,
+            "sort_by": "price_asc"
+          },
+          "state": {
+            "number": 1,
+            "user_message": "Покажи ноутбуки до 80 тысяч",
+            "previous_query": null,
+            "product_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Покажи ноутбуки до 80 тысяч",
+              "parsed_query": {
+                "category": "laptop",
+                "max_price": 80000,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "laptop",
+                80000
+              ],
+              "input_tokens": 438,
+              "products": [
+                {
+                  "id": 1,
+                  "name": "Ноутбук Acer Aspire 3",
+                  "category": "laptop",
+                  "price": 45990
+                },
+                {
+                  "id": 2,
+                  "name": "Ноутбук ASUS VivoBook 15",
+                  "category": "laptop",
+                  "price": 67990
+                },
+                {
+                  "id": 3,
+                  "name": "Ноутбук Lenovo IdeaPad Slim 3",
+                  "category": "laptop",
+                  "price": 79990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 438,
+            "error": null
+          },
+          "history": {
+            "number": 1,
+            "user_message": "Покажи ноутбуки до 80 тысяч",
+            "previous_query": null,
+            "product_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Покажи ноутбуки до 80 тысяч",
+              "parsed_query": {
+                "category": "laptop",
+                "max_price": 80000,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "laptop",
+                80000
+              ],
+              "input_tokens": 430,
+              "products": [
+                {
+                  "id": 1,
+                  "name": "Ноутбук Acer Aspire 3",
+                  "category": "laptop",
+                  "price": 45990
+                },
+                {
+                  "id": 2,
+                  "name": "Ноутбук ASUS VivoBook 15",
+                  "category": "laptop",
+                  "price": 67990
+                },
+                {
+                  "id": 3,
+                  "name": "Ноутбук Lenovo IdeaPad Slim 3",
+                  "category": "laptop",
+                  "price": 79990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 430,
+            "error": null
+          },
+          "state_correct": true,
+          "history_correct": true
+        },
+        {
+          "user_message": "А сначала дорогие?",
+          "expected_query": {
+            "category": "laptop",
+            "max_price": 80000,
+            "sort_by": "price_desc"
+          },
+          "state": {
+            "number": 2,
+            "user_message": "А сначала дорогие?",
+            "previous_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_asc"
+            },
+            "product_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_desc"
+            },
+            "search_response": {
+              "query": "А сначала дорогие?",
+              "parsed_query": {
+                "category": "laptop",
+                "max_price": 80000,
+                "sort_by": "price_desc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price DESC, id ASC",
+              "sql_parameters": [
+                "laptop",
+                80000
+              ],
+              "input_tokens": 452,
+              "products": [
+                {
+                  "id": 3,
+                  "name": "Ноутбук Lenovo IdeaPad Slim 3",
+                  "category": "laptop",
+                  "price": 79990
+                },
+                {
+                  "id": 2,
+                  "name": "Ноутбук ASUS VivoBook 15",
+                  "category": "laptop",
+                  "price": 67990
+                },
+                {
+                  "id": 1,
+                  "name": "Ноутбук Acer Aspire 3",
+                  "category": "laptop",
+                  "price": 45990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 452,
+            "error": null
+          },
+          "history": {
+            "number": 2,
+            "user_message": "А сначала дорогие?",
+            "previous_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_asc"
+            },
+            "product_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_desc"
+            },
+            "search_response": {
+              "query": "А сначала дорогие?",
+              "parsed_query": {
+                "category": "laptop",
+                "max_price": 80000,
+                "sort_by": "price_desc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price DESC, id ASC",
+              "sql_parameters": [
+                "laptop",
+                80000
+              ],
+              "input_tokens": 469,
+              "products": [
+                {
+                  "id": 3,
+                  "name": "Ноутбук Lenovo IdeaPad Slim 3",
+                  "category": "laptop",
+                  "price": 79990
+                },
+                {
+                  "id": 2,
+                  "name": "Ноутбук ASUS VivoBook 15",
+                  "category": "laptop",
+                  "price": 67990
+                },
+                {
+                  "id": 1,
+                  "name": "Ноутбук Acer Aspire 3",
+                  "category": "laptop",
+                  "price": 45990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 469,
+            "error": null
+          },
+          "state_correct": true,
+          "history_correct": true
+        },
+        {
+          "user_message": "А что есть среди смартфонов?",
+          "expected_query": {
+            "category": "smartphone",
+            "max_price": 80000,
+            "sort_by": "price_desc"
+          },
+          "state": {
+            "number": 3,
+            "user_message": "А что есть среди смартфонов?",
+            "previous_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_desc"
+            },
+            "product_query": {
+              "category": "smartphone",
+              "max_price": 80000,
+              "sort_by": "price_desc"
+            },
+            "search_response": {
+              "query": "А что есть среди смартфонов?",
+              "parsed_query": {
+                "category": "smartphone",
+                "max_price": 80000,
+                "sort_by": "price_desc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price DESC, id ASC",
+              "sql_parameters": [
+                "smartphone",
+                80000
+              ],
+              "input_tokens": 455,
+              "products": [
+                {
+                  "id": 8,
+                  "name": "Смартфон Google Pixel 9a",
+                  "category": "smartphone",
+                  "price": 64990
+                },
+                {
+                  "id": 7,
+                  "name": "Смартфон Samsung Galaxy A56",
+                  "category": "smartphone",
+                  "price": 39990
+                },
+                {
+                  "id": 6,
+                  "name": "Смартфон Xiaomi Redmi Note 14",
+                  "category": "smartphone",
+                  "price": 24990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 455,
+            "error": null
+          },
+          "history": {
+            "number": 3,
+            "user_message": "А что есть среди смартфонов?",
+            "previous_query": {
+              "category": "laptop",
+              "max_price": 80000,
+              "sort_by": "price_desc"
+            },
+            "product_query": {
+              "category": "smartphone",
+              "max_price": null,
+              "sort_by": "price_desc"
+            },
+            "search_response": {
+              "query": "А что есть среди смартфонов?",
+              "parsed_query": {
+                "category": "smartphone",
+                "max_price": null,
+                "sort_by": "price_desc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? ORDER BY price DESC, id ASC",
+              "sql_parameters": [
+                "smartphone"
+              ],
+              "input_tokens": 511,
+              "products": [
+                {
+                  "id": 10,
+                  "name": "Смартфон Apple iPhone 16",
+                  "category": "smartphone",
+                  "price": 119990
+                },
+                {
+                  "id": 9,
+                  "name": "Смартфон Samsung Galaxy S25",
+                  "category": "smartphone",
+                  "price": 89990
+                },
+                {
+                  "id": 8,
+                  "name": "Смартфон Google Pixel 9a",
+                  "category": "smartphone",
+                  "price": 64990
+                },
+                {
+                  "id": 7,
+                  "name": "Смартфон Samsung Galaxy A56",
+                  "category": "smartphone",
+                  "price": 39990
+                },
+                {
+                  "id": 6,
+                  "name": "Смартфон Xiaomi Redmi Note 14",
+                  "category": "smartphone",
+                  "price": 24990
+                }
+              ],
+              "message": "Найдено товаров: 5."
+            },
+            "input_tokens": 511,
+            "error": null
+          },
+          "state_correct": true,
+          "history_correct": false
+        }
+      ]
+    },
+    {
+      "name": "dialogue_b",
+      "turns": [
+        {
+          "user_message": "Покажи планшеты",
+          "expected_query": {
+            "category": "tablet",
+            "max_price": null,
+            "sort_by": "price_asc"
+          },
+          "state": {
+            "number": 1,
+            "user_message": "Покажи планшеты",
+            "previous_query": null,
+            "product_query": {
+              "category": "tablet",
+              "max_price": null,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Покажи планшеты",
+              "parsed_query": {
+                "category": "tablet",
+                "max_price": null,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "tablet"
+              ],
+              "input_tokens": 434,
+              "products": [
+                {
+                  "id": 11,
+                  "name": "Планшет Xiaomi Pad 7",
+                  "category": "tablet",
+                  "price": 29990
+                },
+                {
+                  "id": 12,
+                  "name": "Планшет Samsung Galaxy Tab S10 FE",
+                  "category": "tablet",
+                  "price": 44990
+                },
+                {
+                  "id": 13,
+                  "name": "Планшет HUAWEI MatePad 11.5",
+                  "category": "tablet",
+                  "price": 59990
+                },
+                {
+                  "id": 14,
+                  "name": "Планшет Apple iPad Air 11",
+                  "category": "tablet",
+                  "price": 74990
+                },
+                {
+                  "id": 15,
+                  "name": "Планшет Samsung Galaxy Tab S10+",
+                  "category": "tablet",
+                  "price": 99990
+                }
+              ],
+              "message": "Найдено товаров: 5."
+            },
+            "input_tokens": 434,
+            "error": null
+          },
+          "history": {
+            "number": 1,
+            "user_message": "Покажи планшеты",
+            "previous_query": null,
+            "product_query": {
+              "category": "tablet",
+              "max_price": null,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Покажи планшеты",
+              "parsed_query": {
+                "category": "tablet",
+                "max_price": null,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "tablet"
+              ],
+              "input_tokens": 426,
+              "products": [
+                {
+                  "id": 11,
+                  "name": "Планшет Xiaomi Pad 7",
+                  "category": "tablet",
+                  "price": 29990
+                },
+                {
+                  "id": 12,
+                  "name": "Планшет Samsung Galaxy Tab S10 FE",
+                  "category": "tablet",
+                  "price": 44990
+                },
+                {
+                  "id": 13,
+                  "name": "Планшет HUAWEI MatePad 11.5",
+                  "category": "tablet",
+                  "price": 59990
+                },
+                {
+                  "id": 14,
+                  "name": "Планшет Apple iPad Air 11",
+                  "category": "tablet",
+                  "price": 74990
+                },
+                {
+                  "id": 15,
+                  "name": "Планшет Samsung Galaxy Tab S10+",
+                  "category": "tablet",
+                  "price": 99990
+                }
+              ],
+              "message": "Найдено товаров: 5."
+            },
+            "input_tokens": 426,
+            "error": null
+          },
+          "state_correct": true,
+          "history_correct": true
+        },
+        {
+          "user_message": "Только дешевле 60 тысяч",
+          "expected_query": {
+            "category": "tablet",
+            "max_price": 60000,
+            "sort_by": "price_asc"
+          },
+          "state": {
+            "number": 2,
+            "user_message": "Только дешевле 60 тысяч",
+            "previous_query": {
+              "category": "tablet",
+              "max_price": null,
+              "sort_by": "price_asc"
+            },
+            "product_query": {
+              "category": "tablet",
+              "max_price": 60000,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Только дешевле 60 тысяч",
+              "parsed_query": {
+                "category": "tablet",
+                "max_price": 60000,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "tablet",
+                60000
+              ],
+              "input_tokens": 450,
+              "products": [
+                {
+                  "id": 11,
+                  "name": "Планшет Xiaomi Pad 7",
+                  "category": "tablet",
+                  "price": 29990
+                },
+                {
+                  "id": 12,
+                  "name": "Планшет Samsung Galaxy Tab S10 FE",
+                  "category": "tablet",
+                  "price": 44990
+                },
+                {
+                  "id": 13,
+                  "name": "Планшет HUAWEI MatePad 11.5",
+                  "category": "tablet",
+                  "price": 59990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 450,
+            "error": null
+          },
+          "history": {
+            "number": 2,
+            "user_message": "Только дешевле 60 тысяч",
+            "previous_query": {
+              "category": "tablet",
+              "max_price": null,
+              "sort_by": "price_asc"
+            },
+            "product_query": {
+              "category": "tablet",
+              "max_price": 60000,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Только дешевле 60 тысяч",
+              "parsed_query": {
+                "category": "tablet",
+                "max_price": 60000,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "tablet",
+                60000
+              ],
+              "input_tokens": 463,
+              "products": [
+                {
+                  "id": 11,
+                  "name": "Планшет Xiaomi Pad 7",
+                  "category": "tablet",
+                  "price": 29990
+                },
+                {
+                  "id": 12,
+                  "name": "Планшет Samsung Galaxy Tab S10 FE",
+                  "category": "tablet",
+                  "price": 44990
+                },
+                {
+                  "id": 13,
+                  "name": "Планшет HUAWEI MatePad 11.5",
+                  "category": "tablet",
+                  "price": 59990
+                }
+              ],
+              "message": "Найдено товаров: 3."
+            },
+            "input_tokens": 463,
+            "error": null
+          },
+          "state_correct": true,
+          "history_correct": true
+        },
+        {
+          "user_message": "Теперь ноутбуки",
+          "expected_query": {
+            "category": "laptop",
+            "max_price": 60000,
+            "sort_by": "price_asc"
+          },
+          "state": {
+            "number": 3,
+            "user_message": "Теперь ноутбуки",
+            "previous_query": {
+              "category": "tablet",
+              "max_price": 60000,
+              "sort_by": "price_asc"
+            },
+            "product_query": {
+              "category": "laptop",
+              "max_price": 60000,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Теперь ноутбуки",
+              "parsed_query": {
+                "category": "laptop",
+                "max_price": 60000,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "laptop",
+                60000
+              ],
+              "input_tokens": 452,
+              "products": [
+                {
+                  "id": 1,
+                  "name": "Ноутбук Acer Aspire 3",
+                  "category": "laptop",
+                  "price": 45990
+                }
+              ],
+              "message": "Найдено товаров: 1."
+            },
+            "input_tokens": 452,
+            "error": null
+          },
+          "history": {
+            "number": 3,
+            "user_message": "Теперь ноутбуки",
+            "previous_query": {
+              "category": "tablet",
+              "max_price": 60000,
+              "sort_by": "price_asc"
+            },
+            "product_query": {
+              "category": "laptop",
+              "max_price": 60000,
+              "sort_by": "price_asc"
+            },
+            "search_response": {
+              "query": "Теперь ноутбуки",
+              "parsed_query": {
+                "category": "laptop",
+                "max_price": 60000,
+                "sort_by": "price_asc"
+              },
+              "sql": "SELECT id, name, category, price FROM products WHERE category = ? AND price <= ? ORDER BY price ASC, id ASC",
+              "sql_parameters": [
+                "laptop",
+                60000
+              ],
+              "input_tokens": 502,
+              "products": [
+                {
+                  "id": 1,
+                  "name": "Ноутбук Acer Aspire 3",
+                  "category": "laptop",
+                  "price": 45990
+                }
+              ],
+              "message": "Найдено товаров: 1."
+            },
+            "input_tokens": 502,
+            "error": null
+          },
+          "state_correct": true,
+          "history_correct": true
+        }
+      ]
+    }
+  ]
+}

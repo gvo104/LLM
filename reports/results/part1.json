@@ -1,0 +1,16 @@
+{
+  "part": "part1",
+  "direct_call": {
+    "type": "AIMessage",
+    "content": "laptop"
+  },
+  "chain_call": {
+    "type": "TextAccessor",
+    "content": "laptop"
+  },
+  "batch": [
+    "laptop",
+    "smartphone",
+    "other"
+  ]
+}

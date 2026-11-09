@@ -46,6 +46,7 @@ def test_search_tool_uses_product_query_schema() -> None:
     tool = build_search_tool(SpyRepository())
 
     assert tool.args_schema is ProductQuery
+    assert "каталога" in tool.description
 
 
 def test_request_tool_call_binds_single_search_tool() -> None:

@@ -1,92 +1,100 @@
 # Лабораторная работа №1: LangChain Pipelines
 
-Подготовка окружения и демонстрационного каталога товаров для лабораторной
-работы по построению пайплайна LangChain и SQLite.
-
-На текущем этапе подготовлены зависимости, база данных, файл локальных
-настроек и структура каталогов. Код пайплайна, интеграция с LLM и отчёт будут
-добавлены позднее.
-
 ## Структура
 
 ```text
 .
-├── .env                        # локальные параметры LLM и пустое поле токена
-├── data/
-│   └── products.sqlite3   # демонстрационный каталог товаров
-├── notebooks/                  # эксперименты и демонстрации результатов
-├── reports/                    # будущий отчёт и его вспомогательные материалы
+├── data/products.sqlite3     # каталог из 15 товаров
+├── plan/README.md            # краткий план реализации
+├── prompts/                  # промпты
+├── reports/
+│   ├── report.md             # итоговый отчёт
+│   └── results/              # фактические JSON-артефакты
 ├── src/
-│   ├── chains/                 # части 1–2: промпты, LCEL и structured output
-│   ├── catalog/                # часть 3: доступ к SQLite и инструмент поиска
-│   ├── dialogue/               # часть 5: состояние и история диалога
-│   ├── retry/                  # часть 4: retry, тестовый LLM и журнал
-│   └── config/                 # чтение переменных окружения и настройки клиента
-├── tests/                      # проверки частей 2–5 и тестовые сценарии retry
-├── lab01_langchain_pipelines.md
-├── README.md
+│   ├── catalog/              # Pydantic-модели и SQLite
+│   ├── chains/               # LCEL, structured output и tools
+│   ├── config/               # настройки модели и .env
+│   ├── dialogue/             # состояние и история диалога
+│   └── retry/                # retry, fake-модели и журнал
+├── tests/                    # offline unit и integration-тесты
+├── main.py                   # единая live-демонстрация
 └── requirements.txt
 ```
 
-База `data/products.sqlite3` содержит таблицу `products` с полями `id`,
-`name`, `category` и `price`. В каталоге есть ноутбуки, смартфоны и планшеты;
-в каждой категории — минимум четыре товара.
+## Отчёт
 
-### Связь структуры с заданием
-
-| Каталог | Задания из `lab01_langchain_pipelines.md` | Будущее содержимое |
-| --- | --- | --- |
-| `src/chains/` | 1.1, 2.1–2.4 | Параметризованная LCEL-цепочка, Pydantic-схема и сравнение режимов размышления. |
-| `src/catalog/` и `data/` | 3.1–3.4 | SQLite-каталог, безопасный программный поиск и инструмент `search_products`. |
-| `src/retry/` | 4.1–4.4 | Retry цепочки, имитация невалидных ответов и журнал выполнения. |
-| `src/dialogue/` | 5.1–5.2 | Сохранение последнего `ProductQuery` и вариант с историей диалога. |
-| `src/config/` и `.env` | Подготовка и итоговые требования | Конфигурация OpenAI-совместимого клиента без секретов в коде. |
-| `tests/` | 2.3, 3.3, 4.4, 5.2 | Воспроизводимые проверки запросов, поиска и retry. |
-| `notebooks/` и `reports/` | Требования к сдаче | Эксперименты, таблицы сравнений и будущий отчёт. |
+Итоговый отчёт с результатами всех частей лабораторной находится в
+[reports/report.md](reports/report.md). Исходные JSON-артефакты демонстраций
+собраны в `reports/results/`.
 
 ## Окружение
-
-Для работы используется Conda-окружение с Python 3.11:
 
 ```bash
 conda create -n llm-lab01 python=3.11 -y
 conda activate llm-lab01
 python -m pip install --upgrade pip
-python -m pip install langchain langchain-core langchain-openai pydantic
-python -m pip freeze > requirements.txt
-```
-
-Точные версии уже зафиксированы в `requirements.txt`. Чтобы воспроизвести
-окружение, выполните:
-
-```bash
-conda activate llm-lab01
 python -m pip install -r requirements.txt
 ```
 
-## Локальная конфигурация и токен API
+## Локальная конфигурация
 
-Шаблон `.env` содержит адрес университета, модель и пустое поле
-`OPENAI_API_KEY`. Впишите токен только в этот локальный файл. Он исключён из
-Git с помощью `.gitignore` и не должен попадать в исходный код, README или
-отчёт.
-
-Для запуска из оболочки экспортируйте значение из `.env` вручную либо задайте
-переменную напрямую:
+Создайте локальный `.env` из шаблона:
 
 ```bash
-export OPENAI_API_KEY='<ваш_персональный_токен>'
+cp .env.example .env
 ```
 
-Университетский OpenAI-совместимый сервер доступен только из сети университета.
+В нём остаются только два значения:
 
-## Проверка каталога
+```dotenv
+OPENAI_BASE_URL=http://10.32.2.11:35000/v1
+OPENAI_API_KEY=<персональный_токен>
+```
 
-Проверить содержимое базы можно стандартным клиентом SQLite:
+Несекретные параметры модели находятся в
+`src/config/model_config.py`.
+
+## Локальные проверки
+
+```bash
+python -m pip check
+python -m pytest -q
+sqlite3 data/products.sqlite3 'PRAGMA integrity_check;'
+```
+
+## Online-запуск
+
+Единая демонстрация
+последовательно запускает части 1–5 и затем offline-тесты:
+
+```bash
+python main.py
+```
+
+Результаты сохраняются в `reports/results/`. При ошибке этапа скрипт
+останавливается с ненулевым кодом; уже созданные результаты сохраняются.
+
+Отдельные команды:
+
+```bash
+python -m src demo part1 --output reports/results/part1.json
+python -m src demo part2 --reasoning-effort low --output reports/results/part2.json
+python -m src demo part3 --output reports/results/part3.json
+python -m src demo part4 --output reports/results/part4.json
+python -m src demo part5 --output reports/results/dialogues.json
+python -m src search "Покажи ноутбуки до 80 тысяч"
+python -m src chat
+```
+
+`part4` работает offline. Команды `part1`, `part2`, `part3`, `part5`, `search`
+и `chat` требуют доступ к LLM. Обычные цепочки передают
+`reasoning_effort="none"`; thinking-сравнение использует выбранный уровень.
+
+## Каталог
 
 ```bash
 sqlite3 data/products.sqlite3 \
-  'SELECT category, COUNT(*) AS count FROM products GROUP BY category;'
+  'SELECT category, COUNT(*) FROM products GROUP BY category;'
 
 sqlite3 data/products.sqlite3 \
   "SELECT name, price FROM products WHERE category = 'laptop' AND price <= 80000 ORDER BY price;"
