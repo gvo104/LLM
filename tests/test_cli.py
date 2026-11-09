@@ -34,3 +34,27 @@ def test_cli_parses_search_command() -> None:
 
     assert args.command == "search"
     assert args.query == "Покажи планшеты"
+
+
+def test_part4_runs_without_runtime_settings(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+
+    def fail_if_called():
+        raise AssertionError("part4 не должен читать настройки LLM")
+
+    monkeypatch.setattr(cli, "load_runtime_settings", fail_if_called)
+
+    assert cli.main(["demo", "part4"]) == 0
+    assert (tmp_path / "reports/results/parser_errors.json").is_file()
+    retry_demo_path = tmp_path / "reports/results/retry_demo.json"
+    assert retry_demo_path.is_file()
+    assert (tmp_path / "logs/pipeline.log").is_file()
+    retry_demo = json.loads(retry_demo_path.read_text(encoding="utf-8"))
+    assert retry_demo["without_retry"] == {
+        "error": "OutputParserException",
+        "llm_calls": 1,
+    }
+    assert retry_demo["retry_success"]["sqlite_calls"] == 1
+    assert retry_demo["retry_exhausted"]["sqlite_calls"] == 0
+    assert retry_demo["network_error"]["sqlite_calls"] == 0
+    assert retry_demo["other_category"]["sqlite_calls"] == 0
